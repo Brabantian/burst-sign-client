@@ -14,6 +14,24 @@ public class Convert {
     }
   }
 
+  public static byte[] parseHexString(String hex) {
+    if (hex == null) {
+      return null;
+    }
+    byte[] bytes = new byte[hex.length() / 2];
+    for (int i = 0; i < bytes.length; i++) {
+      int char1 = hex.charAt(i * 2);
+      char1 = char1 > 0x60 ? char1 - 0x57 : char1 - 0x30;
+      int char2 = hex.charAt(i * 2 + 1);
+      char2 = char2 > 0x60 ? char2 - 0x57 : char2 - 0x30;
+      if (char1 < 0 || char2 < 0 || char1 > 15 || char2 > 15) {
+        throw new NumberFormatException("Invalid hex number: " + hex);
+      }
+      bytes[i] = (byte)((char1 << 4) + char2);
+    }
+    return bytes;
+  }
+
   public static byte[] emptyToNull(byte[] bytes) {
     if (bytes == null) {
       return null;
